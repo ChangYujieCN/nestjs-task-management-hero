@@ -4,9 +4,11 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from '../auth/user.entity';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
+  private logger = new Logger('TaskRepository');
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
     const task = new Task();
@@ -14,7 +16,18 @@ export class TaskRepository extends Repository<Task> {
     task.description = description;
     task.status = TaskStatus.OPEN;
     task.user = user;
-    await task.save();
+
+    try {
+      await task.save();
+    } catch (e) {
+      this.logger.error(
+        `Fail to create a  task for user "${
+          user.username
+        }", Data: ${createTaskDto}`,
+        e.stack,
+      );
+      throw new InternalServerErrorException();
+    }
     // Don't worry, task has already saved. This action just make front-end user can not see the user data.
     delete task.user;
     return task;
@@ -34,6 +47,16 @@ export class TaskRepository extends Repository<Task> {
         },
       );
     }
-    return query.getMany();
+    try {
+      return await query.getMany();
+    } catch (e) {
+      this.logger.error(
+        `Fail to get tasks for user "${
+          user.username
+        }", Filters: ${JSON.stringify(filterDto)}`,
+        e.stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 }
