@@ -1,7 +1,9 @@
 # compiled output
 /dist
 /node_modules
-
+/task-management-frontend/node_modules
+/task-management-frontend/build
+/task-management-frontend/dist
 # Logs
 logs
 *.log
