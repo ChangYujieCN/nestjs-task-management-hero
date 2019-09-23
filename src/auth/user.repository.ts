@@ -2,8 +2,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-// @ts-ignore
-import { genSaltSync, genSalt, hash } from 'bcrypt';
+import { genSalt, hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
