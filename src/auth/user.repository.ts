@@ -6,7 +6,6 @@ import { genSalt, hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { from } from 'rxjs';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
