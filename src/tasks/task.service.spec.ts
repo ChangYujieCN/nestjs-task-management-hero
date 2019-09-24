@@ -4,7 +4,6 @@ import { TaskRepository } from './task.repository';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
 import { NotFoundException } from '@nestjs/common';
-import mock = jest.mock;
 
 const mockUser = { username: 'Tester', id: 12 };
 const mockTaskRepository = () => ({
@@ -88,7 +87,26 @@ describe('TaskService', () => {
 
     it('should throw an error as task could not be found', () => {
       taskRepository.delete.mockResolvedValue({ affected: 0 });
-      expect(taskService.deleteTaskById(1, mockUser)).rejects.toThrow(NotFoundException);
+      expect(taskService.deleteTaskById(1, mockUser)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('updateTaskStatus', () => {
+    it('should update a task status', async () => {
+      const save = jest.fn().mockResolvedValue(true);
+      taskService.getTaskById = jest.fn().mockResolvedValue({
+        status: TaskStatus.OPEN,
+        save,
+      });
+
+      expect(taskService.getTaskById).not.toHaveBeenCalled();
+      expect(save).not.toHaveBeenCalled();
+      const result = await  taskService.updateTaskStatus(1, TaskStatus.DONE, mockUser);
+      expect(taskService.getTaskById).toHaveBeenCalled();
+      expect(save).toHaveBeenCalled();
+      expect(result.status).toEqual(TaskStatus.DONE);
     });
   });
 });
