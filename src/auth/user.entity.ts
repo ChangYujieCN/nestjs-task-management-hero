@@ -6,7 +6,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { hash } from 'bcrypt';
+import {hash} from 'bcrypt';
+
 import { Task } from '../tasks/task.entity';
 
 @Entity()

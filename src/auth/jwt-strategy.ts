@@ -6,7 +6,6 @@ import { UserRepository } from './user.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { User } from './user.entity';
 import { get } from 'config';
-const jwtConfig: { secret: string } = get('jwt');
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UserRepository)
@@ -14,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET || jwtConfig.secret,
+      secretOrKey: process.env.JWT_SECRET || get('jwt.secret'),
     });
   }
 

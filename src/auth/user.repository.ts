@@ -2,7 +2,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { genSalt, hash } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -13,8 +13,8 @@ export class UserRepository extends Repository<User> {
     const { username, password } = authCredentialsDto;
     const user = new User();
     user.username = username;
-    user.salt = await genSalt();
-    user.password = await UserRepository.hashPassword(password, user.salt);
+    user.salt = await bcrypt.genSalt();
+    user.password = await this.hashPassword(password, user.salt);
     try {
       await user.save();
     } catch (e) {
@@ -37,7 +37,7 @@ export class UserRepository extends Repository<User> {
       return null;
     }
   }
-  private static async hashPassword(password: string, salt: string) {
-    return hash(password, salt);
+  public async hashPassword(password: string, salt: string) {
+    return bcrypt.hash(password, salt);
   }
 }
