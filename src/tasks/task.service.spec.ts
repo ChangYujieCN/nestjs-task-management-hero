@@ -103,7 +103,11 @@ describe('TaskService', () => {
 
       expect(taskService.getTaskById).not.toHaveBeenCalled();
       expect(save).not.toHaveBeenCalled();
-      const result = await  taskService.updateTaskStatus(1, TaskStatus.DONE, mockUser);
+      const result = await taskService.updateTaskStatus(
+        1,
+        TaskStatus.DONE,
+        mockUser,
+      );
       expect(taskService.getTaskById).toHaveBeenCalled();
       expect(save).toHaveBeenCalled();
       expect(result.status).toEqual(TaskStatus.DONE);

@@ -1,2 +1,11 @@
+server:
+  origin: https://nestjs-taskmanagement-1300296942.cos.ap-shanghai.myqcloud.com/
+
 db:
-  synchronize: false
+  host: 'localhost'
+  username: 'postgres'
+  password: '789963321'
+  synchronize: true
+
+jwt:
+  secret: 'topSecret51'
